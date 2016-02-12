@@ -56,5 +56,6 @@ typedef NS_ENUM(NSUInteger, FMMosaicCellSize) {
 
 // Not used, just for backwards compatability
 @property (nonatomic, weak) id<FMMosaicLayoutDelegate> delegate;
+@property (nonatomic, assign) BOOL shouldHaveFooterView;
 
 @end

@@ -118,12 +118,16 @@ static const BOOL kFMDefaultFooterShouldOverlayContent = NO;
         }
         
         // Adds footer view
-        UICollectionViewLayoutAttributes *footerLayoutAttribute =
-        [self addLayoutAttributesForSupplementaryViewOfKind:UICollectionElementKindSectionFooter
-                                                  indexPath:[NSIndexPath indexPathForItem:1 inSection:sectionIndex]];
+        if (self.shouldHaveFooterView) {
+            
+            UICollectionViewLayoutAttributes *footerLayoutAttribute =
+            [self addLayoutAttributesForSupplementaryViewOfKind:UICollectionElementKindSectionFooter
+                                                      indexPath:[NSIndexPath indexPathForItem:1 inSection:sectionIndex]];
 
-        if (![self footerShouldOverlayContent]) {
-            [self growColumnHeightsBy:footerLayoutAttribute.frame.size.height section:sectionIndex];
+            if (![self footerShouldOverlayContent]) {
+                [self growColumnHeightsBy:footerLayoutAttribute.frame.size.height section:sectionIndex];
+            }
+            
         }
         
         // Add bottom section insets, and remove extra added inset
