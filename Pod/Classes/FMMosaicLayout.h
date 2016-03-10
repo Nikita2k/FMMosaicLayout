@@ -35,7 +35,7 @@ typedef NS_ENUM(NSUInteger, FMMosaicCellSize) {
 - (NSInteger)numberOfItemsInSection:(NSInteger)section;
 - (NSInteger)numberOfSections;
 - (CGRect)bounds;
-- (UICollectionView *)collectionView;
+- (UICollectionView *)layoutCollectionView;
     
 @end
 
