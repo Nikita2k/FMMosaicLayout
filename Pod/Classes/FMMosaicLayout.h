@@ -30,6 +30,21 @@ typedef NS_ENUM(NSUInteger, FMMosaicCellSize) {
     FMMosaicCellSizeBig
 };
 
+@protocol EmbedabledCollectionViewLayoutDataSource
+    
+- (NSInteger)numberOfItemsInSection:(NSInteger)section;
+- (NSInteger)numberOfSections;
+- (CGRect)bounds;
+- (UICollectionView *)collectionView;
+    
+@end
+
+@protocol EmbeddableCollectionViewLayoutProtocol
+
+@property (nonatomic, weak) id <EmbedabledCollectionViewLayoutDataSource> dataSource;
+
+@end
+
 @protocol FMMosaicLayoutDelegate <UICollectionViewDelegate>
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView layout:(FMMosaicLayout *)collectionViewLayout numberOfColumnsInSection:(NSInteger)section;
@@ -52,10 +67,11 @@ typedef NS_ENUM(NSUInteger, FMMosaicCellSize) {
 
 @end
 
-@interface FMMosaicLayout : UICollectionViewLayout
+@interface FMMosaicLayout : UICollectionViewLayout < EmbeddableCollectionViewLayoutProtocol >
 
 // Not used, just for backwards compatability
-@property (nonatomic, weak) id<FMMosaicLayoutDelegate> delegate;
+@property (nonatomic, weak) id <FMMosaicLayoutDelegate> delegate;
+@property (nonatomic, weak) id <EmbedabledCollectionViewLayoutDataSource> dataSource;
 @property (nonatomic, assign) BOOL shouldHaveFooterView;
 
 @end

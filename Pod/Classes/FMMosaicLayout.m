@@ -58,7 +58,7 @@ static const BOOL kFMDefaultFooterShouldOverlayContent = NO;
     [self resetLayoutState];
     
     // Calculate layout attritbutes in each section
-    for (NSInteger sectionIndex = 0; sectionIndex < [self.collectionView numberOfSections]; sectionIndex++) {
+    for (NSInteger sectionIndex = 0; sectionIndex < [self.dataSource numberOfSections]; sectionIndex++) {
 
         CGFloat interitemSpacing = [self interitemSpacingAtSection:sectionIndex];
         
@@ -76,7 +76,7 @@ static const BOOL kFMDefaultFooterShouldOverlayContent = NO;
         
         // Calculate cell attributes in each section
         NSMutableArray *smallMosaicCellIndexPathsBuffer = [[NSMutableArray alloc] initWithCapacity:2];
-        for (NSInteger cellIndex = 0; cellIndex < [self.collectionView numberOfItemsInSection:sectionIndex]; cellIndex++) {
+        for (NSInteger cellIndex = 0; cellIndex < [self.dataSource numberOfItemsInSection:sectionIndex]; cellIndex++) {
             
             NSIndexPath *cellIndexPath = [NSIndexPath indexPathForItem:cellIndex inSection:sectionIndex];
             FMMosaicCellSize mosaicCellSize = [self mosaicCellSizeForItemAtIndexPath:cellIndexPath];
@@ -178,13 +178,13 @@ static const BOOL kFMDefaultFooterShouldOverlayContent = NO;
 }
 
 - (CGFloat)collectionViewContentWidth {
-    return self.collectionView.bounds.size.width;
+    return self.dataSource.bounds.size.width;
 }
 
 #pragma mark - Orientation
 
 - (BOOL)shouldInvalidateLayoutForBoundsChange:(CGRect)newBounds {
-    CGRect oldBounds = self.collectionView.bounds;
+    CGRect oldBounds = self.dataSource.bounds;
     
     // Invalidate if the bounds has changed
     if (!CGSizeEqualToSize(oldBounds.size, newBounds.size)) {
@@ -209,7 +209,7 @@ static const BOOL kFMDefaultFooterShouldOverlayContent = NO;
 
 - (NSArray *)columnHeightsPerSection {
     if (!_columnHeightsPerSection) {
-        NSInteger sectionCount = [self.collectionView numberOfSections];
+        NSInteger sectionCount = [self.dataSource numberOfSections];
         _columnHeightsPerSection = [[NSMutableArray alloc] initWithCapacity:sectionCount];
         
         for (NSInteger sectionIndex = 0; sectionIndex < sectionCount; sectionIndex++) {
@@ -392,7 +392,7 @@ static const BOOL kFMDefaultFooterShouldOverlayContent = NO;
 - (NSInteger)numberOfColumnsInSection:(NSInteger)section {
     NSInteger columnCount = kFMDefaultNumberOfColumnsInSection;
     if ([self.delegate respondsToSelector:@selector(collectionView:layout:numberOfColumnsInSection:)]) {
-        columnCount = [self.delegate collectionView:self.collectionView layout:self numberOfColumnsInSection:section];
+        columnCount = [self.delegate collectionView:self.dataSource.collectionView layout:self numberOfColumnsInSection:section];
     }
     return columnCount;
 }
@@ -400,7 +400,7 @@ static const BOOL kFMDefaultFooterShouldOverlayContent = NO;
 - (FMMosaicCellSize)mosaicCellSizeForItemAtIndexPath:(NSIndexPath *)indexPath {
     FMMosaicCellSize cellSize = kFMDefaultCellSize;
     if ([self.delegate respondsToSelector:@selector(collectionView:layout:mosaicCellSizeForItemAtIndexPath:)]) {
-        cellSize = [self.delegate collectionView:self.collectionView layout:self mosaicCellSizeForItemAtIndexPath:indexPath];
+        cellSize = [self.delegate collectionView:self.dataSource.collectionView layout:self mosaicCellSizeForItemAtIndexPath:indexPath];
     }
     return cellSize;
 }
@@ -408,7 +408,7 @@ static const BOOL kFMDefaultFooterShouldOverlayContent = NO;
 - (UIEdgeInsets)insetForSectionAtIndex:(NSInteger)section {
     UIEdgeInsets inset = UIEdgeInsetsZero;
     if ([self.delegate respondsToSelector:@selector(collectionView:layout:insetForSectionAtIndex:)]) {
-        inset = [self.delegate collectionView:self.collectionView layout:self insetForSectionAtIndex:section];
+        inset = [self.delegate collectionView:self.dataSource.collectionView layout:self insetForSectionAtIndex:section];
     }
     return inset;
 }
@@ -416,7 +416,7 @@ static const BOOL kFMDefaultFooterShouldOverlayContent = NO;
 - (CGFloat)interitemSpacingAtSection:(NSInteger)section {
     CGFloat interitemSpacing = 0.0;
     if ([self.delegate respondsToSelector:@selector(collectionView:layout:interitemSpacingForSectionAtIndex:)]) {
-        interitemSpacing = [self.delegate collectionView:self.collectionView layout:self interitemSpacingForSectionAtIndex:section];
+        interitemSpacing = [self.delegate collectionView:self.dataSource.collectionView layout:self interitemSpacingForSectionAtIndex:section];
     }
     return interitemSpacing;
 }
@@ -424,7 +424,7 @@ static const BOOL kFMDefaultFooterShouldOverlayContent = NO;
 - (CGFloat)heightForHeaderAtSection:(NSInteger)section {
     CGFloat height = kFMDefaultHeaderFooterHeight;
     if ([self.delegate respondsToSelector:@selector(collectionView:layout:heightForHeaderInSection:)]) {
-        height = [self.delegate collectionView:self.collectionView layout:self heightForHeaderInSection:section];
+        height = [self.delegate collectionView:self.dataSource.collectionView layout:self heightForHeaderInSection:section];
     }
     return height;
 }
@@ -432,7 +432,7 @@ static const BOOL kFMDefaultFooterShouldOverlayContent = NO;
 - (CGFloat)heightForFooterAtSection:(NSInteger)section {
     CGFloat height = kFMDefaultHeaderFooterHeight;
     if ([self.delegate respondsToSelector:@selector(collectionView:layout:heightForFooterInSection:)]) {
-        height = [self.delegate collectionView:self.collectionView layout:self heightForFooterInSection:section];
+        height = [self.delegate collectionView:self.dataSource.collectionView layout:self heightForFooterInSection:section];
     }
     return height;
 }
@@ -440,7 +440,7 @@ static const BOOL kFMDefaultFooterShouldOverlayContent = NO;
 - (BOOL)headerShouldOverlayContent {
     CGFloat shouldOverlay = kFMDefaultHeaderShouldOverlayContent;
     if ([self.delegate respondsToSelector:@selector(headerShouldOverlayContentInCollectionView:layout:)]) {
-        shouldOverlay = [self.delegate headerShouldOverlayContentInCollectionView:self.collectionView layout:self];
+        shouldOverlay = [self.delegate headerShouldOverlayContentInCollectionView:self.dataSource.collectionView layout:self];
     }
     return shouldOverlay;
 }
@@ -448,14 +448,14 @@ static const BOOL kFMDefaultFooterShouldOverlayContent = NO;
 - (BOOL)footerShouldOverlayContent {
     CGFloat shouldOverlay = kFMDefaultFooterShouldOverlayContent;
     if ([self.delegate respondsToSelector:@selector(footerShouldOverlayContentInCollectionView:layout:)]) {
-        shouldOverlay = [self.delegate footerShouldOverlayContentInCollectionView:self.collectionView layout:self];
+        shouldOverlay = [self.delegate footerShouldOverlayContentInCollectionView:self.dataSource.collectionView layout:self];
     }
     return shouldOverlay;
 }
 
 // If layout delegate hasn't been provided, resort to collection view's delegate which is likely a UICollectionViewController
 - (id<FMMosaicLayoutDelegate>)delegate {
-    return _delegate ? _delegate : (id)self.collectionView.delegate;
+    return _delegate ? _delegate : (id)self.dataSource.collectionView.delegate;
 }
 
 @end
